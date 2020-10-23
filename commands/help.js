@@ -1,34 +1,20 @@
 const { MessageEmbed } = require("discord.js")
-const { readdirSync } = require("fs")
 const { COLOR } = require("../config.json");
+
+
+
 module.exports = {
   name: "help",
-  description: "Get all commands name and description",
-  execute (client, message, args) {
+  description: "Get help bot info",
+  execute(client, message, args) {
     
-    
-let embed = new MessageEmbed()
-.setAuthor("HELP SECTION", client.user.displayAvatarURL())
-.setThumbnail(client.user.displayAvatarURL())
-.setColor(COLOR)
-.setDescription(`These are the command ${client.user.username} Bot, INVITE ME - [LINK](https://top.gg/bot/750178438278545441)`)
-let command = readdirSync("./commands")    
-
-let i;
-    for(i = 0; i < command.length; i++) {
-      console.log(command[i])
-      
-      const cmd = client.commands.get(command[i].replace(".js", ""))
-      embed.addField(`**${cmd.name}**`, cmd.description, true)
-      
-    }
-    
-    message.channel.send(embed)
-    
-    
-
-    
-    
-    
+    let yembed = new MessageEmbed()
+    .setColor(COLOR)
+    .setThumbnail(client.user.displayAvatarURL())
+    .setAuthor(`Invite the bot`, client.user.displayAvatarURL())
+    .setDescription(`My name is **${client.user.username}** and there are my invite link`)
+    .addField("INVITE BOT", `[Bot invite](http://google.com)`)
+ console.log(client.user.presence)
+    message.channel.send(yembed)
   }
-}
+};

@@ -2,15 +2,12 @@ const discord = require("discord.js")
 const client = new discord.Client({ disableEveryone: true, disabledEvents: ["TYPING_START"] });
 const { readdirSync } = require("fs");
 const { join } = require("path");
-const { TOKEN , prefix , ServerID } = require("./config.json");
-const config = require("./config.json")
-const COLOR = require("./config.json")
-
+const { TOKEN, PREFIX } = require("./config.json")
 
 //CLIENT EVENTS
-client.on("ready", async () => {
+client.on("ready", () => {
   console.log('Ready to play song | Bot created by CTK WARRIOR')
-  client.user.setPresence({ activity: { name: `k!help | ${client.guilds.cache.size} server`, type:'LISTENING' }, status: 'online' })
+ client.user.setPresence({ activity: { name: 'k!help | maintenance' , type:'LISTENING' }, status: 'dnd' })
 })
 
 client.on("warn", info => console.log(info));
@@ -19,7 +16,7 @@ client.on("error", console.error)
 
 //DEFINIING
 client.commands = new discord.Collection()
-client.prefix = prefix
+client.prefix = PREFIX
 client.queue = new Map();
 client.vote = new Map();
 
@@ -36,9 +33,9 @@ client.on("message", message => {
    if (message.author.bot) return;
   if (!message.guild) return;
   
-  if(message.content.startsWith(prefix)) { //IF MESSSAGE STARTS WITH MINE BOT PREFIX
+  if(message.content.startsWith(PREFIX)) { //IF MESSSAGE STARTS WITH MINE BOT PREFIX
     
-    const args = message.content.slice(prefix.length).trim().split(/ +/) //removing prefix from args
+    const args = message.content.slice(PREFIX.length).trim().split(/ +/) //removing prefix from args
     const command = args.shift().toLowerCase();
     
     if(!client.commands.has(command)) {
@@ -55,8 +52,7 @@ client.on("message", message => {
     }
     
   }
-});
-
+})
 
 
 

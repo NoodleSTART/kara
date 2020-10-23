@@ -2,6 +2,7 @@
 const ytdlDiscord = require("ytdl-core-discord");
 const { MessageEmbed } = require("discord.js")
 const { QUEUE_LIMIT, COLOR } = require("../config.json");
+const { oneLineTrim } = require('common-tags');
 
 module.exports = {
   async play(song, message, client, args, songData) {

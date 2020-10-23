@@ -4,7 +4,7 @@ const { MessageEmbed } = require("discord.js")
 const { QUEUE_LIMIT, COLOR } = require("../config.json");
 
 module.exports = {
-  async play(song, message) {
+  async play(song, message, client, args, songData) {
     const queue = message.client.queue.get(message.guild.id);
 let embed = new MessageEmbed()
 .setColor(COLOR);
@@ -12,7 +12,7 @@ let embed = new MessageEmbed()
     if (!song) {
       queue.channel.leave();
       message.client.queue.delete(message.guild.id);
-      embed.setAuthor("THE MUSIC IN THE QUEUE HAS BEEN FINISHED ON THE PLAY")
+      embed.setAuthor("MUSIC QUEUE IS ENDED NOW :/")
       return queue.textChannel
         .send(embed)
         .catch(console.error);
@@ -50,11 +50,26 @@ let embed = new MessageEmbed()
       .on("error", console.error);
   
     dispatcher.setVolumeLogarithmic(queue.volume / 100); //VOLUME
-embed.setAuthor("playing song ", message.client.user.displayAvatarURL())
+
+let totalSeconds = (song.duration);
+let days = Math.floor(totalSeconds / 86400);
+totalSeconds %= 86400;
+let hours = Math.floor(totalSeconds / 3600);
+totalSeconds %= 3600;
+let minutes = Math.floor(totalSeconds / 60);
+let seconds = Math.floor(totalSeconds % 60);
+    
+    
+embed.setAuthor("PLAYING SONG", message.client.user.displayAvatarURL())
+    .setThumbnail(message.client.user.displayAvatarURL())
     .setDescription(`**[${song.title}](${song.url})**`)
+    .addField("DURATION", `${minutes}:${seconds}`, true)
+    .addField("CHANNEL", song.channel , true)
+    .setImage(song.thumbnail)
+    .setTimestamp()
     
     queue.textChannel
       .send(embed)
-      .catch(err => message.channel.send("CANNOT PLAY MUSIC"));
+      .catch(err => message.channel.send("UNABLE TO PLAY SONG"));
   }
 };

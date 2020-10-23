@@ -5,7 +5,7 @@ const { join } = require("path");
 const { TOKEN , prefix , ServerID } = require("./config.json");
 const config = require("./config.json")
 const COLOR = require("./config.json")
-const db = require("quick.db");
+
 
 //CLIENT EVENTS
 client.on("ready", async () => {
@@ -56,6 +56,8 @@ client.on("message", message => {
     
   }
 });
+
+
 
 
 //DONT DO ANYTHING WITH THIS TOKEN lol

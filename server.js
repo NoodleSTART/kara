@@ -7,7 +7,7 @@ const { TOKEN, PREFIX } = require("./config.json")
 //CLIENT EVENTS
 client.on("ready", () => {
   console.log('Ready to play song | Bot created by CTK WARRIOR')
- client.user.setPresence({ activity: { name: 'k!help | maintenance' , type:'LISTENING' }, status: 'dnd' })
+ client.user.setPresence({ activity: { name:  `k!help | ${client.guilds.cache.size} server` , type:'LISTENING' }, status: 'online' })
 })
 
 client.on("warn", info => console.log(info));

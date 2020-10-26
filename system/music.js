@@ -21,8 +21,11 @@ let embed = new MessageEmbed()
 
     try {
       var stream = await ytdlDiscord(song.url, {
-        highWaterMark: 1 << 25
-      });
+        quality: 'lowest',
+        filter: 'audioonly',
+        encoderArgs: ['-af', 'equalizer=f=70:width_type=h:width=100:g=15,bass=g=7,dynaudnorm=f=200']
+        })
+      var streamType = song.url.includes("youtube.com") ? "opus" : "ogg/opus";
     } catch (error) {
       if (queue) {
         queue.songs.shift();
@@ -35,9 +38,9 @@ let embed = new MessageEmbed()
         console.error(error);
       }
     }
-
+   
     const dispatcher = queue.connection
-      .play(stream, { type: "opus" })
+      .play(stream, { type: streamType })
       .on("finish", () => {
         if (queue.loop) {
           let lastsong = queue.songs.shift();

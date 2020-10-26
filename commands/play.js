@@ -29,8 +29,12 @@ module.exports = {
     if (!channel) {
       //IF AUTHOR IS NOT IN VOICE CHANNEL
       return message.channel.send("You must be on the voice channel first :(");
-    }
-
+    } else {
+      channel.join()
+  .then(connection => {
+      connection.voice.setDeaf(true);
+  });
+  }
     //WE WILL ADD PERMS ERROR LATER :(
 
     const targetsong = args.join(" ");

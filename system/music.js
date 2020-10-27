@@ -2,9 +2,10 @@
 const ytdlDiscord = require("ytdl-core-discord");
 const { MessageEmbed } = require("discord.js")
 const { QUEUE_LIMIT, COLOR } = require("../config.json");
+const { oneLineTrim } = require('common-tags');
 
 module.exports = {
-  async play(song, message) {
+  async play(song, message, client, args, songData) {
     const queue = message.client.queue.get(message.guild.id);
 let embed = new MessageEmbed()
 .setColor(COLOR);
@@ -20,8 +21,11 @@ let embed = new MessageEmbed()
 
     try {
       var stream = await ytdlDiscord(song.url, {
-        highWaterMark: 1 << 25
-      });
+        quality: 'lowest',
+        filter: 'audioonly',
+        encoderArgs: ['-af', 'equalizer=f=70:width_type=h:width=100:g=15,bass=g=7,dynaudnorm=f=200']
+        })
+      var streamType = song.url.includes("youtube.com") ? "opus" : "ogg/opus";
     } catch (error) {
       if (queue) {
         queue.songs.shift();
@@ -34,9 +38,9 @@ let embed = new MessageEmbed()
         console.error(error);
       }
     }
-
+   
     const dispatcher = queue.connection
-      .play(stream, { type: "opus" })
+      .play(stream, { type: streamType })
       .on("finish", () => {
         if (queue.loop) {
           let lastsong = queue.songs.shift();
@@ -50,8 +54,23 @@ let embed = new MessageEmbed()
       .on("error", console.error);
   
     dispatcher.setVolumeLogarithmic(queue.volume / 100); //VOLUME
-embed.setAuthor("Started Playing Song", message.client.user.displayAvatarURL())
+
+let totalSeconds = (song.duration);
+let days = Math.floor(totalSeconds / 86400);
+totalSeconds %= 86400;
+let hours = Math.floor(totalSeconds / 3600);
+totalSeconds %= 3600;
+let minutes = Math.floor(totalSeconds / 60);
+let seconds = Math.floor(totalSeconds % 60);
+    
+    
+embed.setAuthor("PLAYING SONG", message.client.user.displayAvatarURL())
+    .setThumbnail(message.client.user.displayAvatarURL())
     .setDescription(`**[${song.title}](${song.url})**`)
+    .addField("DURATION", `${minutes}:${seconds}`, true)
+    .addField("CHANNEL", song.channel , true)
+    .setImage(song.thumbnail)
+    .setTimestamp()
     
     queue.textChannel
       .send(embed)

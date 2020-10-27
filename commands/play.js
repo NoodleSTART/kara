@@ -28,10 +28,13 @@ module.exports = {
         
     if (!channel) {
       //IF AUTHOR IS NOT IN VOICE CHANNEL
-      embed.setAuthor("YOU NEED TO BE IN VOICE CHANNEL :/")
-      return message.channel.send(embed);
-    }
-
+      return message.channel.send("You must be on the voice channel first :(");
+    } else {
+      channel.join()
+  .then(connection => {
+      connection.voice.setDeaf(true);
+  });
+  }
     //WE WILL ADD PERMS ERROR LATER :(
 
     const targetsong = args.join(" ");
@@ -70,6 +73,7 @@ module.exports = {
       
         song = {
              title: songData.videoDetails.title,
+          channel: songData.videoDetails.author.name,
           url: songData.videoDetails.video_url,
           duration: songData.videoDetails.lengthSeconds,
           thumbnail: songData.videoDetails.thumbnail.thumbnails[3].url
@@ -92,6 +96,7 @@ module.exports = {
         song = {
           title: songData.videoDetails.title,
           url: songData.videoDetails.video_url,
+          channel: songData.videoDetails.author.name,
           duration: songData.videoDetails.lengthSeconds,
           thumbnail: songData.videoDetails.thumbnail.thumbnails[3].url,
         };
@@ -107,12 +112,21 @@ module.exports = {
         if(serverQueue.songs.length > Math.floor(QUEUE_LIMIT - 1) && QUEUE_LIMIT !== 0) {
       return message.channel.send(`You can not add songs more than ${QUEUE_LIMIT} in queue`)
     }
-      
+let totalSeconds = (song.duration);
+let days = Math.floor(totalSeconds / 86400);
+totalSeconds %= 86400;
+let hours = Math.floor(totalSeconds / 3600);
+totalSeconds %= 3600;
+let minutes = Math.floor(totalSeconds / 60);
+let seconds = Math.floor(totalSeconds % 60);
     
       serverQueue.songs.push(song);
       embed.setAuthor("Added New Song To Queue", client.user.displayAvatarURL())
+      embed.setThumbnail(message.client.user.displayAvatarURL())
       embed.setDescription(`**[${song.title}](${song.url})**`)
-      embed.setThumbnail(song.thumbnail)
+      embed.addField("DURATION", `${minutes}:${seconds}`, true)
+      embed.addField("CHANNEL", song.channel , true)
+      embed.setImage(song.thumbnail)
       .setFooter("Likes - " + songData.videoDetails.likes + ", Dislikes - " +  songData.videoDetails.dislikes)
       
       return serverQueue.textChannel

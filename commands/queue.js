@@ -11,15 +11,13 @@ module.exports = {
 
     if (!channel) {
       //IF AUTHOR IS NOT IN VOICE CHANNEL
-      embed.setAuthor("YOU NEED TO BE IN VOICE CHANNEL :/");
-      return message.channel.send(embed);
+      return message.channel.send("You must be on the voice channel first :(");
     }
 
     const serverQueue = message.client.queue.get(message.guild.id);
 
     if (!serverQueue) {
-      embed.setAuthor("There is nothing in the queue");
-      return message.channel.send(embed);
+      return message.channel.send("There is nothing in the queue");
     }
 
     embed.setDescription(
